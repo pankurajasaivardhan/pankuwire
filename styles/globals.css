@@ -1,0 +1,182 @@
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800;900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg:        #FFFFFF;
+  --panel:     #FAFAFA;
+  --border:    #E2E2E2;
+  --muted:     #888888;
+  --dark:      #0A0A0A;
+  --up:        #1A7A3C;
+  --down:      #C0392B;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { font-size: 14px; }
+
+body {
+  background: var(--bg);
+  color: var(--dark);
+  font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+  font-weight: 400;
+  -webkit-font-smoothing: antialiased;
+  line-height: 1.5;
+}
+
+.font-mono { font-family: 'IBM Plex Mono', 'Courier New', monospace; }
+
+/* ── MASTHEAD ── */
+.masthead-title {
+  font-family: 'Inter', sans-serif;
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  color: var(--dark);
+}
+
+/* ── SECTION LABELS (small caps eyebrow) ── */
+.section-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* ── PAGE HEADLINE ── */
+.page-headline {
+  font-family: 'Inter', sans-serif;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--dark);
+  line-height: 1.1;
+}
+
+/* ── ARTICLE HEADLINES ── */
+.headline-lg {
+  font-family: 'Inter', sans-serif;
+  font-weight: 800;
+  letter-spacing: -0.015em;
+  line-height: 1.2;
+  color: var(--dark);
+}
+.headline-md {
+  font-family: 'Inter', sans-serif;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  line-height: 1.3;
+  color: var(--dark);
+}
+.headline-sm {
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  letter-spacing: -0.005em;
+  line-height: 1.35;
+  color: var(--dark);
+}
+
+.dek {
+  font-family: 'Inter', sans-serif;
+  font-weight: 400;
+  color: #555555;
+  line-height: 1.55;
+}
+
+.data-num {
+  font-family: 'IBM Plex Mono', monospace;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+/* ── CARDS ── */
+.pw-card {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  transition: border-color 0.12s, box-shadow 0.12s;
+}
+.pw-card:hover {
+  border-color: var(--dark);
+  box-shadow: 0 1px 10px rgba(0,0,0,0.06);
+}
+
+/* ── LEAD STORY CARD (briefing) ── */
+.lead-card {
+  border-bottom: 3px solid var(--dark);
+}
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar { width: 3px; height: 3px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--dark); border-radius: 2px; }
+.no-scroll::-webkit-scrollbar { display: none; }
+.no-scroll { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* ── NAV TABS ── */
+.pw-tab {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 7px 12px;
+  border-radius: 2px;
+  white-space: nowrap;
+  color: var(--muted);
+  transition: color 0.1s, background 0.1s, border-color 0.1s;
+  cursor: pointer;
+  border: 1px solid transparent;
+  background: transparent;
+}
+.pw-tab:hover { color: var(--dark); border-color: var(--border); }
+.pw-tab.active { background: var(--dark); color: #fff; border-color: var(--dark); }
+
+/* ── DSA BADGE ── */
+.dsa-badge {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.66rem;
+  font-weight: 500;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  color: var(--dark);
+  padding: 2px 8px;
+  border-radius: 2px;
+}
+
+/* ── SOURCE PILL ── */
+.src-pill {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.64rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  padding: 2px 6px;
+  border-radius: 2px;
+  display: inline-block;
+  background: var(--panel);
+  color: var(--dark);
+  border: 1px solid var(--border);
+  text-transform: uppercase;
+}
+
+/* ── BOOKMARK STAR ── */
+.bookmark-btn {
+  background: none; border: none; cursor: pointer;
+  font-size: 16px; line-height: 1; padding: 2px;
+  color: #CCCCCC; transition: color 0.12s, transform 0.08s;
+}
+.bookmark-btn:hover { color: var(--dark); transform: scale(1.1); }
+.bookmark-btn.active { color: var(--dark); }
+
+.up   { color: var(--up); }
+.down { color: var(--down); }
+
+.lc2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.lc3 { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+
+@media (max-width: 640px) {
+  .sm-hide { display: inline-block !important; }
+  html { font-size: 13px; }
+}
