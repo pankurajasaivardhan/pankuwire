@@ -1,6 +1,4 @@
-// PankuWire — Global Search API
-// GET /api/search?q=query&limit=5
-//
+
 // Searches across all 11 news categories simultaneously using cached
 // article data (MongoDB L2 if available, in-memory L1 otherwise).
 // Returns top results per category grouped by section.
