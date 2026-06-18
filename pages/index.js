@@ -4,9 +4,11 @@ import NewsFeed from '../components/NewsFeed';
 import PaperFeed from '../components/PaperFeed';
 import Briefing from '../components/Briefing';
 import Bookmarks from '../components/Bookmarks';
+import GlobalSearch from '../components/GlobalSearch';
 
 const TABS = [
   { id: 'today',     label: 'Today',          type: 'briefing' },
+  { id: 'search',    label: 'Search',         type: 'search' },
   { id: 'india',     label: 'India',          type: 'news' },
   { id: 'tech',      label: 'Tech',           type: 'news' },
   { id: 'ai',        label: 'AI & ML',        type: 'news' },
@@ -23,6 +25,7 @@ const TABS = [
 
 const TAB_DESC = {
   today: 'Your daily digest — top story from every section, ranked live',
+  search: 'Search across all 11 sections simultaneously · KMP + fuzzy matching',
   india: 'Live RSS · 12 sources · The Hindu, ET, Mint, NDTV, MoneyControl',
   tech: 'Live RSS · 12 sources · TechCrunch, Wired, IEEE, Ars Technica',
   ai: 'Live RSS + arXiv · 11 sources · Google AI, HuggingFace, MIT Tech Review',
@@ -104,6 +107,7 @@ export default function Home() {
           {current?.type === 'papers'    && <PaperFeed />}
           {current?.type === 'briefing'  && <Briefing onNavigate={setActiveTab} />}
           {current?.type === 'bookmarks' && <Bookmarks />}
+          {current?.type === 'search'    && <GlobalSearch onNavigate={setActiveTab} />}
         </main>
 
         {/* ── FOOTER ── */}
@@ -111,7 +115,7 @@ export default function Home() {
           <div style={{ maxWidth:'1400px', margin:'0 auto', display:'flex', flexWrap:'wrap', alignItems:'center', justifyContent:'space-between', gap:'8px' }}>
             <div>
               <span className="masthead-title" style={{ fontSize:'14px' }}>PankuWire</span>
-              <span className="section-label" style={{ marginLeft:'10px', fontWeight:400 }}>v7.0 &middot; BUILT BY PANKU</span>
+              <span className="section-label" style={{ marginLeft:'10px', fontWeight:400 }}>v8.0 &middot; BUILT BY PANKU</span>
             </div>
             <div style={{ display:'flex', flexWrap:'wrap', gap:'12px' }} className="section-label">
               <span style={{ fontWeight:400 }}>150+ RSS SOURCES</span>

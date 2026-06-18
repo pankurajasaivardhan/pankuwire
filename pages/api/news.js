@@ -1,4 +1,7 @@
 import Parser from 'rss-parser';
+import { dedupe } from '../../lib/dedupe';
+import { recordFetch } from '../../lib/health';
+import { readCache, writeCache } from '../../lib/articleCache';
 
 const parser = new Parser({
   timeout: 9000,
@@ -167,23 +170,45 @@ export default async function handler(req, res) {
   if (!feeds) return res.status(400).json({ items: [], error: 'Unknown category' });
 
   const now = Date.now();
+
+  // L1 — in-memory cache (per serverless instance, fastest)
   if (cache[category] && now - cache[category].ts < (cache[category].ttl || CACHE_TTL)) {
-    res.setHeader('X-Cache', 'HIT');
+    res.setHeader('X-Cache', 'HIT-MEMORY');
     return res.status(200).json(cache[category].data);
   }
 
-  const results = await Promise.allSettled(feeds.map(fetchFeed));
-  let items = results.filter(r => r.status === 'fulfilled').flatMap(r => r.value);
-  const successCount = results.filter(r => r.status === 'fulfilled' && r.value.length > 0).length;
-  items.sort((a, b) => new Date(b.pubDate) - new Date(a.pubDate));
+  // L2 — MongoDB cache (shared across instances, survives cold starts)
+  const mongoData = await readCache(category);
+  if (mongoData) {
+    // Warm the L1 cache from MongoDB so next request is instant
+    cache[category] = { data: mongoData, ts: now, ttl: CACHE_TTL };
+    res.setHeader('X-Cache', 'HIT-MONGO');
+    return res.status(200).json(mongoData);
+  }
 
-  const data = {
-    items, total: items.length,
-    sourcesOk: successCount, sourcesTotal: feeds.length,
-    updatedAt: new Date().toISOString(),
-  };
+  // L3 — fetch from RSS sources (deduplicated to prevent thundering herd)
+  const data = await dedupe(`news:${category}`, async () => {
+    const results = await Promise.allSettled(feeds.map(fetchFeed));
+    let items = results.filter(r => r.status === 'fulfilled').flatMap(r => r.value);
+    const successCount = results.filter(r => r.status === 'fulfilled' && r.value.length > 0).length;
+    items.sort((a, b) => new Date(b.pubDate) - new Date(a.pubDate));
 
-  cache[category] = { data, ts: now, ttl: items.length > 0 ? CACHE_TTL : 60 * 1000 };
+    const result = {
+      items, total: items.length,
+      sourcesOk: successCount, sourcesTotal: feeds.length,
+      updatedAt: new Date().toISOString(),
+      cacheSource: 'live',
+    };
+
+    const ttl = items.length > 0 ? CACHE_TTL : 60 * 1000;
+    // Write to both caches
+    cache[category] = { data: result, ts: Date.now(), ttl };
+    await writeCache(category, result, ttl / 1000);
+    recordFetch(category, result);
+    return result;
+  });
+
+  res.setHeader('X-Cache', 'MISS');
   res.setHeader('Cache-Control', 's-maxage=300, stale-while-revalidate');
   return res.status(200).json(data);
 }
