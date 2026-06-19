@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { getBookmarks, removeBookmark } from '../lib/bookmarks';
+import { getBookmarks, removeBookmark, syncFromServer } from '../lib/bookmarks';
 
 function timeAgo(d) {
   const s = (Date.now() - new Date(d)) / 1000;
@@ -14,8 +14,13 @@ export default function Bookmarks() {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    // First load from localStorage immediately
     setItems(getBookmarks());
     setMounted(true);
+    // Then sync from server in background (merges any cross-device bookmarks)
+    syncFromServer().then(() => {
+      setItems(getBookmarks());
+    });
   }, []);
 
   function remove(id) {
@@ -39,7 +44,10 @@ export default function Bookmarks() {
   return (
     <div>
       <p className="dek" style={{ fontSize:'12px', marginBottom:'18px' }}>
-        {items.length} article{items.length !== 1 ? 's' : ''} saved on this device.
+        {items.length} article{items.length !== 1 ? 's' : ''} saved &middot;
+        <span style={{ fontFamily:'IBM Plex Mono', fontSize:'10px', color:'#BBBBBB', marginLeft:'8px' }}>
+          SYNCED TO MONGODB &middot; PERSISTS ACROSS DEVICES
+        </span>
       </p>
       <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fill,minmax(280px,1fr))', gap:'14px' }}>
         {items.map((item, i) => (
