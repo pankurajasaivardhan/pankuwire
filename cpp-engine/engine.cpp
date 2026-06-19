@@ -1,7 +1,4 @@
-// PankuWire v2 — C++ Speed Engine
-// Algorithms: Bloom Filter, Custom HashMap, Merge Sort, Quickselect
-// Compile: g++ -O2 -std=c++17 -o engine engine.cpp
-// Used via: subprocess from Python or as standalone binary
+
 
 #include <iostream>
 #include <vector>
@@ -12,8 +9,8 @@
 #include <functional>
 #include <sstream>
 
-// ── 1. BLOOM FILTER ─────────────────────────────────────────
-// Space-efficient probabilistic deduplication — O(1) insert/lookup
+// 1. BLOOM FILTER 
+
 class BloomFilter {
     std::vector<bool> bits;
     size_t size;
@@ -96,7 +93,7 @@ public:
     }
 };
 
-// ── 3. MERGE SORT ────────────────────────────────────────────
+//  3. MERGE SORT 
 // Stable sort for merging pre-sorted RSS feeds — O(n log n)
 struct Article {
     std::string id, title, source;
@@ -127,8 +124,7 @@ void mergeSort(std::vector<Article>& arr, int l, int r) {
     merge(arr, l, m, r);
 }
 
-// ── 4. QUICKSELECT (Top-K) ───────────────────────────────────
-// Find top-K articles by score in O(n) average — faster than full sort
+// 4. QUICKSELECT (Top-K) 
 int partitionByScore(std::vector<Article>& arr, int lo, int hi) {
     double pivot = arr[hi].score;
     int i = lo;
@@ -161,7 +157,7 @@ std::vector<Article> topK(std::vector<Article> arr, int k) {
     return result;
 }
 
-// ── 5. KMP SEARCH ────────────────────────────────────────────
+// 5. KMP SEARCH 
 std::vector<int> buildLPS(const std::string& pattern) {
     int m = pattern.size();
     std::vector<int> lps(m, 0);
@@ -189,9 +185,7 @@ bool kmpSearch(const std::string& text, const std::string& pattern) {
     return false;
 }
 
-// ── MAIN: Command-line interface ─────────────────────────────
-// Called by Python via subprocess:
-// echo "DEDUP\ntitle1\ntitle2\ntitle1" | ./engine
+//  MAIN: Command line interface 
 
 int main(int argc, char* argv[]) {
     std::string mode = argc > 1 ? argv[1] : "DEDUP";
@@ -212,7 +206,7 @@ int main(int argc, char* argv[]) {
         }
     }
     else if (mode == "TOPK") {
-        // Read: k on first line, then "id\tscore\ttimestamp" per line
+        // Read: k on first line
         int k = 20;
         std::cin >> k;
         std::cin.ignore();
