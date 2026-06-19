@@ -1,5 +1,25 @@
-node_modules/
-.next/
+# dependencies
+/node_modules
+
+# next.js
+/.next/
+/out/
+
+# production
+/build
+
+# env files
 .env*.local
 .env
+
+# misc
+.DS_Store
+*.log
+npm-debug.log*
+
+# vercel
 .vercel
+
+# feed health reports 
+feed_health_*.md
+feed_report.md
